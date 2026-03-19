@@ -9,9 +9,9 @@ load_dotenv()
 
 def get_connection():
     return psycopg2.connect(
-        dbname=os.getenv("DB_NAME"),
-        user=os.getenv("DB_USER"),
-        password=os.getenv("DB_PASSWORD"),
+        dbname=os.getenv("POSTGRES_NAME"),
+        user=os.getenv("POSTGRES_USER"),
+        password=os.getenv("POSTGRES_PASSWORD"),
         host=os.getenv("DB_HOST"),
         port=os.getenv("DB_PORT")
     )
@@ -26,8 +26,7 @@ def init_db():
             author TEXT,
             description TEXT,
             language TEXT,
-            stars TEXT,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            stars TEXT
         );
     ''')
     conn.commit()
@@ -45,7 +44,7 @@ def save_to_db(data_list):
 def get_all_from_db():
     conn = get_connection()
     cur = conn.cursor(cursor_factory=RealDictCursor)
-    cur.execute('SELECT name, author, description, language, stars FROM repositories ORDER BY created_at DESC')
+    cur.execute('SELECT name, author, description, language, stars FROM repositories ORDER BY stars DESC')
     return cur.fetchall()
 
 def clear_db():

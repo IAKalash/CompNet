@@ -1,13 +1,17 @@
-from fastapi import FastAPI, HTTPException, Query
 from parser import run_parser 
 from database import init_db, save_to_db, get_all_from_db, clear_db
+
+from fastapi import FastAPI, HTTPException, Query
 
 
 init_db()
 app = FastAPI(title="GitHub Parser API")
 
 @app.post("/parse")
-def trigger_parsing(search_query: str = Query(...), pages: int = Query(1)):
+def trigger_parsing(
+    search_query: str = Query(...), 
+    pages: int = Query(1)
+):
     try:
         data = run_parser(search_query, pages)
         save_to_db(data)
